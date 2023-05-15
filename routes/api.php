@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('upload', [LetterController::class, 'upload']);
-Route::get('get', [LetterController::class, 'getAll']);
 
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AuthController::class, 'adminLogin']);
@@ -29,16 +28,15 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::prefix('user')->group(function () {
-    Route::post('/login', [AuthController::class, 'subscriberLogin']);
+    Route::post('/login', [AuthController::class, 'userLogin']);
     Route::middleware(['auth:sanctum', 'user.type'])->group(function () {
-        Route::get('test', function () {
-            return "B";
-        });
+        Route::get('find', [LetterController::class, 'findOption']);
+        Route::get('show/{id}', [LetterController::class, 'show']);
     });
 });
 
 Route::prefix('delivery')->group(function () {
-    Route::post('/login', [AuthController::class, 'subscriberLogin']);
+    Route::post('/login', [AuthController::class, 'deliveryLogin']);
     Route::middleware(['auth:sanctum', 'delivery.type'])->group(function () {
         Route::get('test', function () {
             return "B";

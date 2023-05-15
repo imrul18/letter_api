@@ -34,17 +34,47 @@ class LetterController extends Controller
         ], 201);
     }
 
-    //get all letters function name getAll with base url for file
-    public function getAll()
+    public function findOption(Request $request)
     {
-        $letters = Letter::all();
-        foreach ($letters as $letter) {
-            $letter->file = url('uploads/' . $letter->file);
-        }
+        $letter = Letter::where('letter_id', 'like', strval($request->q) . '%')->get()->take(10);
+        $letter->transform(function ($user) {
+            return [
+                'label' => $user->letter_id,
+                'value' => $user->id,
+            ];
+        });
         return response()->json([
-            'message' => 'Letters fetched successfully',
-            'status' => 200,
-            'data' => $letters,
-        ], 200);
+            'message' => '',
+            'data' => $letter,
+            'status' => 203,
+        ], 203);
+    }
+
+    public function show(string $id)
+    {
+        $letter = Letter::find($id);
+        if ($letter) {
+            $letter->file = url('uploads/' . $letter->file);
+            return response()->json([
+                'message' => '',
+                'status' => 200,
+                'data' => $letter,
+            ], 200);
+        }
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $letter = Letter::find($id);
+        $letter->status = 'received';
+        $letter->stamp_value = $request->stamp_value;
+        if ($letter) {
+            $letter->file = url('uploads/' . $letter->file);
+            return response()->json([
+                'message' => '',
+                'status' => 200,
+                'data' => $letter,
+            ], 200);
+        }
     }
 }

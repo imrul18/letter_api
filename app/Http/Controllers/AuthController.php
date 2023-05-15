@@ -34,7 +34,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function adminUser(Request $request)
+    public function userLogin(Request $request)
     {
         $request->validate([
             'username' => 'required',
@@ -59,7 +59,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function loginDelivery(Request $request)
+    public function deliveryLogin(Request $request)
     {
         $request->validate([
             'username' => 'required',
