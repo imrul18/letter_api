@@ -20,15 +20,5 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123456'),
             'type' => 'admin',
         ]);
-        User::create([
-            'username' => 'user',
-            'password' => Hash::make('123456'),
-            'type' => 'user',
-        ]);
-        User::create([
-            'username' => 'delivery',
-            'password' => Hash::make('123456'),
-            'type' => 'delivery',
-        ]);
     }
 }
