@@ -10,7 +10,7 @@ class TypeController extends Controller
 {
     public function index(Request $request)
     {
-        $types = Type::paginate($request->per_page, 10);
+        $types = Type::where('po_id', auth()->user()->po_id)->paginate($request->per_page, 10);
         return response()->json($types, 200);
     }
     public function store(Request $request)

@@ -20,6 +20,12 @@ class BagController extends Controller
             'name' => 'required',
         ]);
 
+        if (Bag::where('po_id', auth()->user()->id)->whereDate('created_at', Carbon::today()->toDateString())->count()) return response()->json([
+            'message' => 'Bag already created today',
+            'status' => 203,
+            'data' => '',
+        ], 203);
+
         foreach ($request as $value) {
             $unique = uniqid();
             $number = Bag::whereDate('created_at', Carbon::today()->toDateString())->count() + 1;
