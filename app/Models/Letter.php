@@ -12,10 +12,13 @@ class Letter extends Model
     protected $fillable = [
         'letter_id',
         'bag_id',
+        'type',
         'file',
         'sender_phone',
         'receiver_phone',
         'stamp_value',
+        'from',
+        'to',
         'status',
     ];
 }

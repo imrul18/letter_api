@@ -42,9 +42,9 @@ class PostOfiiceController extends Controller
             $postOffices->save();
             return response()->json([
                 'message' => 'Post office updated successfully',
-                'status' => 200,
+                'status' => 201,
                 'data' => $postOffices,
-            ], 200);
+            ], 201);
         }
         return response()->json([
             'message' => 'Post office not found',
@@ -60,8 +60,8 @@ class PostOfiiceController extends Controller
             $postOffices->save();
             return response()->json([
                 'message' => 'Post office status changed successfully',
-                'status' => 200,
-            ], 200);
+                'status' => 201,
+            ], 201);
         }
         return response()->json([
             'message' => 'Post office not found',
@@ -76,8 +76,8 @@ class PostOfiiceController extends Controller
             $postOffices->delete();
             return response()->json([
                 'message' => 'Post office deleted successfully',
-                'status' => 200,
-            ], 200);
+                'status' => 201,
+            ], 201);
         }
         return response()->json([
             'message' => 'Post office not found',

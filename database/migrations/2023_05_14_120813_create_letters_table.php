@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('letter_id');
             $table->string('bag_id')->nullable();
+            $table->string('type')->nullable()->comment('type id');
             $table->string('file');
             $table->string('sender_phone');
             $table->string('receiver_phone');
             $table->string('stamp_value')->nullable();
+            $table->string('from')->nullable()->comment('post office id');
+            $table->string('to')->nullable()->comment('post office id');
             $table->enum('status', ['uploaded', 'received', 'delivering', 'delivered']);
             $table->timestamps();
         });

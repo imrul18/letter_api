@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\Letter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LetterController extends Controller
 {
-    //file upload function name upload
     public function upload(Request $request)
     {
         $request->validate([
@@ -68,8 +68,22 @@ class LetterController extends Controller
         $letter = Letter::find($id);
         $letter->status = 'received';
         $letter->stamp_value = $request->stamp_value;
+        $letter->type = $request->type;
         if ($letter) {
             $letter->file = url('uploads/' . $letter->file);
+            return response()->json([
+                'message' => '',
+                'status' => 200,
+                'data' => $letter,
+            ], 200);
+        }
+    }
+
+    public function delivery(Request $request, string $id)
+    {
+        $letter = Letter::find($id);
+        $letter->status = 'delivered';
+        if ($letter) {
             return response()->json([
                 'message' => '',
                 'status' => 200,

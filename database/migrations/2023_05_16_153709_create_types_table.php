@@ -11,16 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('types', function (Blueprint $table) {
             $table->id();
-            $table->string('username')->unique();
-            $table->string('password');
-            $table->enum('type', ['admin', 'user', 'delivery']);
             $table->integer('po_id')->nullable()->comment('post office id');
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('name');
             $table->softDeletes();
-            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('types');
     }
 };

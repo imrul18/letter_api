@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('bags', function (Blueprint $table) {
             $table->id();
+            $table->integer('po_id')->nullable()->comment('post office id');
+            $table->string('bag_id');
+            $table->text('letter_id');
             $table->timestamps();
         });
     }

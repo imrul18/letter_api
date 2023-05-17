@@ -4,18 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Bag extends Model
+class Type extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'po_id',
-        'bag_id',
-        'letter_id',
-    ];
-
-    protected $casts = [
-        'letter_id' => 'array',
+        'name',
     ];
 }
