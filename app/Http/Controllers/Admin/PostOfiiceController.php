@@ -10,16 +10,27 @@ class PostOfiiceController extends Controller
 {
     public function index(Request $request)
     {
-        $postOffices = PostOffice::paginate($request->get('perPage', 10));
+        $postOffices = PostOffice::where('name', 'like', '%' . $request->q . '%')->orWhere('code', 'like', '%' . $request->q . '%')->paginate($request->get('perPage', 10));
         return response()->json($postOffices, 200);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
+        if (!$request->code) return response()->json([
+            'message' => 'Post office code is required',
+            'status' => 203,
+        ], 203);
+        if (!$request->name) return response()->json([
+            'message' => 'Post office name is required',
+            'status' => 203,
+        ], 203);
+        if (PostOffice::where('code', $request->code)->count()) return response()->json([
+            'message' => 'Post office code already exists',
+            'status' => 203,
+        ], 203);
+
         $postOffices = new PostOffice();
+        $postOffices->code = $request->code;
         $postOffices->name = $request->name;
         $postOffices->address = $request->address;
         $postOffices->save();
@@ -30,6 +41,12 @@ class PostOfiiceController extends Controller
         ], 201);
     }
 
+    public function show(string $id)
+    {
+        $postOffice = PostOffice::find($id);
+        return response()->json($postOffice, 200);
+    }
+
     public function update(Request $request, string $id)
     {
         $request->validate([
@@ -37,6 +54,7 @@ class PostOfiiceController extends Controller
         ]);
         $postOffices = PostOffice::find($id);
         if ($postOffices) {
+            $postOffices->code = $request->code;
             $postOffices->name = $request->name;
             $postOffices->address = $request->address;
             $postOffices->save();

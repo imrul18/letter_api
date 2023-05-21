@@ -11,6 +11,7 @@ class PostOffice extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'code',
         'name',
         'address',
         'status'

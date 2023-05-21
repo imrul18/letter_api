@@ -12,10 +12,10 @@ class AuthController extends Controller
     public function adminLogin(Request $request)
     {
         $request->validate([
-            'username' => 'required',
+            'phone' => 'required',
             'password' => 'required',
         ]);
-        $user = User::where('username', $request->username)->where('type', 'admin')->first();
+        $user = User::where('phone', $request->phone)->where('type', 'admin')->first();
         if (!$user) return response()->json([
             'message' => 'User not found',
             'status' => 203,
@@ -37,10 +37,10 @@ class AuthController extends Controller
     public function userLogin(Request $request)
     {
         $request->validate([
-            'username' => 'required',
+            'phone' => 'required',
             'password' => 'required',
         ]);
-        $user = User::where('username', $request->username)->where('type', 'user')->first();
+        $user = User::where('phone', $request->phone)->where('type', 'user')->first();
         if (!$user) return response()->json([
             'message' => 'User not found',
             'status' => 203,
@@ -52,20 +52,16 @@ class AuthController extends Controller
 
 
         $user->token = $user->createToken('user-token')->plainTextToken;
-        return response()->json([
-            'message' => 'Login successful',
-            'status' => 200,
-            'data' => $user,
-        ], 200);
+        return response()->json($user, 200);
     }
 
     public function deliveryLogin(Request $request)
     {
         $request->validate([
-            'username' => 'required',
+            'phone' => 'required',
             'password' => 'required',
         ]);
-        $user = User::where('username', $request->username)->where('type', 'delivery')->first();
+        $user = User::where('phone', $request->phone)->where('type', 'delivery')->first();
         if (!$user) return response()->json([
             'message' => 'User not found',
             'status' => 203,

@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'username',
+        'phone',
         'password',
         'type',
         'po_id',
@@ -40,7 +40,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public $type = [
+    public $userType = [
         'admin' => 'admin',
         'user' => 'user',
         'delivery' => 'delivery',

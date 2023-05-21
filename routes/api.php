@@ -27,6 +27,7 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['auth:sanctum', 'admin.type'])->group(function () {
         Route::get('post-office', [PostOfiiceController::class, 'index']);
         Route::post('post-office', [PostOfiiceController::class, 'store']);
+        Route::get('post-office/{id}', [PostOfiiceController::class, 'show']);
         Route::post('post-office-update/{id}', [PostOfiiceController::class, 'update']);
         Route::post('post-office-change-status/{id}', [PostOfiiceController::class, 'changeStatus']);
         Route::post('post-office-delete/{id}', [PostOfiiceController::class, 'delete']);

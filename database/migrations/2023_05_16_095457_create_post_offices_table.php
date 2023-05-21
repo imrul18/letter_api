@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('post_offices', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('code')->unique()->nullable();
             $table->string('address')->nullable();
             $table->boolean('status')->default(true);
             $table->softDeletes();
