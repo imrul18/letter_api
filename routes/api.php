@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\LetterController;
 use App\Http\Controllers\Admin\PostOfiiceController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\OptionController;
 use App\Http\Controllers\User\BagController;
 use App\Http\Controllers\User\TypeController;
 use Illuminate\Http\Request;
@@ -34,9 +35,12 @@ Route::prefix('admin')->group(function () {
 
         Route::get('user', [UserController::class, 'index']);
         Route::post('user', [UserController::class, 'store']);
-        Route::post('user/{id}', [UserController::class, 'update']);
-        Route::post('user/{id}', [UserController::class, 'changeStatus']);
-        Route::post('user/{id}', [UserController::class, 'delete']);
+        Route::get('user/{id}', [UserController::class, 'show']);
+        Route::post('user-update/{id}', [UserController::class, 'update']);
+        Route::post('user-change-status/{id}', [UserController::class, 'changeStatus']);
+        Route::post('user-delete/{id}', [UserController::class, 'delete']);
+
+        Route::get('option-post-office', [OptionController::class, 'postOffice']);
     });
 });
 

@@ -11,7 +11,7 @@ class BagController extends Controller
 {
     public function index(Request $request)
     {
-        $bags = Bag::where('po_id', auth()->user()->po_id)->where('created_at', Carbon::today())->first();
+        $bags = Bag::where('po_id', auth()->user()->po_id)->where('created_at', Carbon::today()->toDateString())->first();
         return response()->json($bags, 200);
     }
     public function makeStore(Request $request)

@@ -19,6 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'name',
         'phone',
         'password',
         'type',
@@ -45,4 +46,9 @@ class User extends Authenticatable
         'user' => 'user',
         'delivery' => 'delivery',
     ];
+
+    public function postOffice()
+    {
+        return $this->hasOne(PostOffice::class, 'id', 'po_id');
+    }
 }

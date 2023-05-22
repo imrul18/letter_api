@@ -11,28 +11,47 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::paginate($request->per_page, 10);
+        $users = User::with('postOffice')
+            ->where('name', 'like', '%' . $request->q . '%')
+            ->orWhereHas('postOffice', function ($query) use ($request) {
+                $query->where('code', 'like', '%' . $request->q . '%');
+            })
+            ->paginate($request->get('perPage', 10));
         return response()->json($users, 200);
     }
     public function store(Request $request)
     {
-        $request->validate([
-            'username' => 'required',
-            'type' => 'required',
-            'po_id' => 'required',
-        ]);
+        if (!$request->phone) return response()->json([
+            'message' => 'Phone Number is required',
+            'status' => 203,
+        ], 203);
+        if (!$request->type) return response()->json([
+            'message' => 'User role is required',
+            'status' => 203,
+        ], 203);
+        if (!$request->po_id) return response()->json([
+            'message' => 'Post office is required',
+            'status' => 203,
+        ], 203);
         $user = new User();
-        $user->username = $request->username;
+        $user->name = $request->name;
+        $user->phone = $request->phone;
         $user->password = Hash::make('123456');
         $user->type = $request->type;
         $user->po_id = $request->po_id;
-        $user->status = 'active';
+        $user->status = true;
         $user->save();
         return response()->json([
-            'message' => 'Post office created successfully',
+            'message' => 'User created successfully',
             'status' => 201,
             'data' => $user,
         ], 201);
+    }
+
+    public function show(string $id)
+    {
+        $user = User::find($id);
+        return response()->json($user, 200);
     }
 
     public function update(Request $request, string $id)
@@ -64,7 +83,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if ($user) {
-            $user->status = $user->status === 'active' ? 'inactive' : 'active';
+            $user->status = !$user->status;
             $user->save();
             return response()->json([
                 'message' => 'User status changed successfully',
