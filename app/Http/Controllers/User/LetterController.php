@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Letter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Image;
 
 class LetterController extends Controller
 {
@@ -16,9 +17,12 @@ class LetterController extends Controller
             'sender_phone' => 'required',
             'receiver_phone' => 'required',
         ]);
+
+
         $unique = uniqid();
         $fileName = $unique . time() . '.' . $request->file->extension();
         $request->file->move(public_path('uploads'), $fileName);
+
         $number = Letter::whereDate('created_at', Carbon::today()->toDateString())->count() + 1;
         $letter = new Letter();
         $letter->file = $fileName;
@@ -36,46 +40,48 @@ class LetterController extends Controller
 
     public function findOption(Request $request)
     {
-        $letter = Letter::where('letter_id', 'like', strval($request->q) . '%')->get()->take(10);
-        $letter->transform(function ($user) {
-            return [
-                'label' => $user->letter_id,
-                'value' => $user->id,
-            ];
-        });
-        return response()->json([
-            'message' => '',
-            'data' => $letter,
-            'status' => 203,
-        ], 203);
+        $letter = Letter::where('status', 'uploaded')->where('letter_id', 'like', '%' . $request->q . '%')->get()->take(10);
+        return response()->json($letter, 200);
     }
 
     public function show(string $id)
     {
         $letter = Letter::find($id);
         if ($letter) {
-            $letter->file = url('uploads/' . $letter->file);
-            return response()->json([
-                'message' => '',
-                'status' => 200,
-                'data' => $letter,
-            ], 200);
+            return response()->json(
+                $letter,
+                200
+            );
         }
     }
 
     public function update(Request $request, string $id)
     {
+        if (!$request->type) {
+            return response()->json([
+                'message' => 'Type is required',
+                'status' => 203,
+            ], 203);
+        }
+        if (!$request->stamp_value) {
+            return response()->json([
+                'message' => 'Stamp Value is required',
+                'status' => 203,
+            ], 203);
+        }
         $letter = Letter::find($id);
         $letter->status = 'received';
         $letter->stamp_value = $request->stamp_value;
         $letter->type = $request->type;
+        $letter->next = $request->next;
+        $letter->from = auth()->user()->po_id;
+        $letter->save();
         if ($letter) {
-            $letter->file = url('uploads/' . $letter->file);
             return response()->json([
-                'message' => '',
-                'status' => 200,
-                'data' => $letter,
-            ], 200);
+                'message' => 'Letter updated successfully',
+                'status' => 201,
+                'data' => '',
+            ], 201);
         }
     }
 

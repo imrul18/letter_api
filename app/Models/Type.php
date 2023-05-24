@@ -13,5 +13,7 @@ class Type extends Model
     protected $fillable = [
         'po_id',
         'name',
+        'description',
+        'status'
     ];
 }

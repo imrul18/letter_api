@@ -21,5 +21,13 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123456'),
             'type' => 'admin',
         ]);
+
+        User::create([
+            'name' => 'Afnan',
+            'phone' => '01677756338',
+            'password' => Hash::make('123456'),
+            'type' => 'user',
+            'po_id' => '1'
+        ]);
     }
 }

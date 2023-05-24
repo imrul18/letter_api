@@ -24,8 +24,6 @@ class AuthController extends Controller
             'message' => 'Password is incorrect',
             'status' => 203,
         ], 203);
-
-
         $user->token = $user->createToken('admin-token')->plainTextToken;
         return response()->json([
             'message' => 'Login successful',
@@ -49,10 +47,12 @@ class AuthController extends Controller
             'message' => 'Password is incorrect',
             'status' => 203,
         ], 203);
-
-
         $user->token = $user->createToken('user-token')->plainTextToken;
-        return response()->json($user, 200);
+        return response()->json([
+            'message' => 'Login successful',
+            'status' => 200,
+            'data' => $user,
+        ], 200);
     }
 
     public function deliveryLogin(Request $request)

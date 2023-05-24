@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('receiver_phone');
             $table->string('stamp_value')->nullable();
             $table->string('from')->nullable()->comment('post office id');
+            $table->string('next')->nullable();
             $table->string('to')->nullable()->comment('post office id');
             $table->enum('status', ['uploaded', 'received', 'delivering', 'delivered']);
             $table->timestamps();

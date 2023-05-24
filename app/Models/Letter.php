@@ -18,7 +18,16 @@ class Letter extends Model
         'receiver_phone',
         'stamp_value',
         'from',
+        'next',
         'to',
         'status',
     ];
+
+    // appending image url
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        return url('uploads/' . $this->file);
+    }
 }

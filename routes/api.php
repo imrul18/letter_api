@@ -49,16 +49,20 @@ Route::prefix('user')->group(function () {
     Route::middleware(['auth:sanctum', 'user.type'])->group(function () {
         Route::get('find', [LetterController::class, 'findOption']);
         Route::get('show/{id}', [LetterController::class, 'show']);
-        Route::get('update/{id}', [LetterController::class, 'update']);
+        Route::post('update/{id}', [LetterController::class, 'update']);
 
         Route::get('type', [TypeController::class, 'index']);
         Route::post('type', [TypeController::class, 'store']);
-        Route::post('type/{id}', [TypeController::class, 'update']);
-        Route::post('type/{id}', [TypeController::class, 'delete']);
+        Route::get('type/{id}', [TypeController::class, 'show']);
+        Route::post('type-update/{id}', [TypeController::class, 'update']);
+        Route::post('type-change-status/{id}', [TypeController::class, 'changeStatus']);
+        Route::post('type-delete/{id}', [TypeController::class, 'delete']);
 
         Route::get('bag', [BagController::class, 'index']);
         Route::post('bag', [BagController::class, 'makeStore']);
         Route::get('bag-update', [BagController::class, 'update']);
+
+        Route::get('option-type', [OptionController::class, 'type']);
     });
 });
 

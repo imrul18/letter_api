@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('po_id')->nullable()->comment('post office id');
             $table->string('name');
+            $table->string('description')->nullable();
+            $table->boolean('status')->default(true);
             $table->softDeletes();
             $table->timestamps();
         });
