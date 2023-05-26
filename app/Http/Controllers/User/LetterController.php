@@ -38,7 +38,7 @@ class LetterController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'file' => 'required|image|max:2048',
+            'file' => 'required|image',
             'sender_phone' => 'required',
             'receiver_phone' => 'required',
         ]);
