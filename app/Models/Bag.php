@@ -13,6 +13,7 @@ class Bag extends Model
         'po_id',
         'bag_id',
         'letter_id',
+        'date',
     ];
 
     protected $casts = [

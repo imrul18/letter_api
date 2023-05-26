@@ -21,6 +21,7 @@ class Letter extends Model
         'next',
         'to',
         'status',
+        'received_at',
     ];
 
     // appending image url
@@ -29,5 +30,10 @@ class Letter extends Model
     public function getImageUrlAttribute()
     {
         return url('uploads/' . $this->file);
+    }
+
+    public function type()
+    {
+        return $this->hasOne(Type::class, 'id', 'type');
     }
 }

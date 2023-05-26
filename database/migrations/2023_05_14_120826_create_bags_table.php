@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('po_id')->nullable()->comment('post office id');
             $table->string('bag_id');
             $table->text('letter_id');
+            $table->date('date');
             $table->timestamps();
         });
     }

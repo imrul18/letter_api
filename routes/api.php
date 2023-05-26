@@ -58,6 +58,9 @@ Route::prefix('user')->group(function () {
         Route::post('type-change-status/{id}', [TypeController::class, 'changeStatus']);
         Route::post('type-delete/{id}', [TypeController::class, 'delete']);
 
+        Route::get('letter', [LetterController::class, 'index']);
+        Route::get('all-letter', [LetterController::class, 'allLetter']);
+
         Route::get('bag', [BagController::class, 'index']);
         Route::post('bag', [BagController::class, 'makeStore']);
         Route::get('bag-update', [BagController::class, 'update']);

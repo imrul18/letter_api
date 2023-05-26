@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('next')->nullable();
             $table->string('to')->nullable()->comment('post office id');
             $table->enum('status', ['uploaded', 'received', 'delivering', 'delivered']);
+            $table->timestamp('received_at')->nullable();
             $table->timestamps();
         });
     }

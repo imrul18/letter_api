@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bag;
 use App\Models\Letter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -10,6 +11,30 @@ use Image;
 
 class LetterController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $letters = Letter::with('type')->where('from', auth()->user()->po_id)->where('letter_id', 'like', '%' . $request->q . '%')->whereDate('received_at', Carbon::parse($request->date)->toDateString())->paginate($request->get('perPage', 10));
+        $isBag = Bag::where('po_id', auth()->user()->po_id)->whereDate('date', Carbon::parse($request->date)->toDateString())->exists();
+        return response()->json(['data' => $letters, 'isBag' => $isBag], 200);
+    }
+
+    public function allLetter(Request $request)
+    {
+        $letters = Letter::with('type')->where('from', auth()->user()->po_id)->whereDate('received_at', Carbon::parse($request->bag_date)->toDateString())->get();
+
+        $isBag = Bag::where('po_id', auth()->user()->po_id)->whereDate('date', Carbon::parse($request->bag_date)->toDateString())->exists();
+
+        if ($isBag) {
+            return response()->json([
+                'message' => 'Bag already created for this date',
+                'status' => 203,
+                'data' => $letters,
+            ], 203);
+        }
+        return response()->json($letters, 200);
+    }
+
     public function upload(Request $request)
     {
         $request->validate([
@@ -74,6 +99,7 @@ class LetterController extends Controller
         $letter->stamp_value = $request->stamp_value;
         $letter->type = $request->type;
         $letter->next = $request->next;
+        $letter->received_at = Carbon::now();
         $letter->from = auth()->user()->po_id;
         $letter->save();
         if ($letter) {
