@@ -60,6 +60,7 @@ Route::prefix('user')->group(function () {
 
         Route::get('letter', [LetterController::class, 'index']);
         Route::get('all-letter', [LetterController::class, 'allLetter']);
+        Route::get('bag-letter/{id}', [LetterController::class, 'bagLetter']);
 
         Route::get('bag', [BagController::class, 'index']);
         Route::post('bag', [BagController::class, 'makeStore']);

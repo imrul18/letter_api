@@ -35,6 +35,22 @@ class LetterController extends Controller
         return response()->json($letters, 200);
     }
 
+    public function bagLetter(string $id)
+    {
+        $bag = Bag::find($id);
+        if (!$bag) return response()->json([
+            'message' => 'Bag not found',
+            'status' => 203,
+            'data' => '',
+        ], 203);
+        $data = [];
+        foreach ($bag->letter_id as $letter_id) {
+            $data[] = Letter::with('type')->where('letter_id', $letter_id)->first();
+        }
+        $bag['letter'] = $data;
+        return response()->json($bag, 200);
+    }
+
     public function upload(Request $request)
     {
         $request->validate([
