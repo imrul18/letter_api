@@ -16,4 +16,9 @@ class Type extends Model
         'description',
         'status'
     ];
+
+    //cast
+    protected $casts = [
+        'status' => 'integer',
+    ];
 }

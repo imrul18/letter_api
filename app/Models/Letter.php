@@ -24,6 +24,10 @@ class Letter extends Model
         'received_at',
     ];
 
+    protected $casts = [
+        'status' => 'integer',
+    ];
+
     // appending image url
     protected $appends = ['image_url'];
 

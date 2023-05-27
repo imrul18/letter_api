@@ -39,6 +39,8 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'status' => 'integer',
+        'po_id' => 'integer',
     ];
 
     public $userType = [

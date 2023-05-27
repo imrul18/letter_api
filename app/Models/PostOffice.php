@@ -16,4 +16,9 @@ class PostOffice extends Model
         'address',
         'status'
     ];
+
+    //cast
+    protected $casts = [
+        'status' => 'integer',
+    ];
 }
