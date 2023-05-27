@@ -7,7 +7,7 @@ use App\Models\Bag;
 use App\Models\Letter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Image;
+use Intervention\Image\Facades\Image;
 
 class LetterController extends Controller
 {
@@ -46,7 +46,18 @@ class LetterController extends Controller
 
         $unique = uniqid();
         $fileName = $unique . time() . '.' . $request->file->extension();
-        $request->file->move(public_path('uploads'), $fileName);
+
+
+        $image = Image::make($request->file);
+        $image->resize(400, 300, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+        $image->save(public_path('uploads/' . $fileName));
+
+        // $request->file->move(public_path('uploads'), $fileName);
+
+
 
         $number = Letter::whereDate('created_at', Carbon::today()->toDateString())->count() + 1;
         $letter = new Letter();
