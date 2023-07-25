@@ -28,7 +28,6 @@ class Letter extends Model
         'status' => 'integer',
     ];
 
-    // appending image url
     protected $appends = ['image_url'];
 
     public function getImageUrlAttribute()
@@ -36,8 +35,20 @@ class Letter extends Model
         return url('uploads/' . $this->file);
     }
 
+    public $statusOption = [
+        '1' => 'Uploaded',
+        '2' => 'Received',
+        '3' => 'Delivering',
+        '4' => 'Delivered',
+    ];
+
     public function type()
     {
         return $this->hasOne(Type::class, 'id', 'type');
+    }
+
+    public function bag()
+    {
+        return $this->hasOne(Bag::class);
     }
 }

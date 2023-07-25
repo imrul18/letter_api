@@ -12,11 +12,15 @@ class Bag extends Model
     protected $fillable = [
         'po_id',
         'bag_id',
-        'letter_id',
         'date',
     ];
 
     protected $casts = [
         'letter_id' => 'array',
     ];
+
+    public function letters()
+    {
+        return $this->hasMany(Letter::class);
+    }
 }

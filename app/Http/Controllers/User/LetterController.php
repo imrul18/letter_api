@@ -37,17 +37,12 @@ class LetterController extends Controller
 
     public function bagLetter(string $id)
     {
-        $bag = Bag::find($id);
+        $bag = Bag::with('letters')->find($id);
         if (!$bag) return response()->json([
             'message' => 'Bag not found',
             'status' => 203,
             'data' => '',
         ], 203);
-        $data = [];
-        foreach ($bag->letter_id as $letter_id) {
-            $data[] = Letter::with('type')->where('letter_id', $letter_id)->first();
-        }
-        $bag['letter'] = $data;
         return response()->json($bag, 200);
     }
 
@@ -59,6 +54,30 @@ class LetterController extends Controller
             'receiver_phone' => 'required',
         ]);
 
+        if (!$request->hasFile('file')) return response()->json([
+            'message' => 'File size is too large',
+            'status' => 203,
+        ], 203);
+
+        if (!$request->sender_phone) return response()->json([
+            'message' => 'Sender phone is required',
+            'status' => 203,
+        ], 203);
+
+        if (!$request->receiver_phone) return response()->json([
+            'message' => 'Receiver phone is required',
+            'status' => 203,
+        ], 203);
+
+        if (strlen($request->sender_phone) != 11  || substr($request->sender_phone, 0, 1) != '0') return response()->json([
+            'message' => 'Sender phone is invalid',
+            'status' => 203,
+        ], 203);
+
+        if (strlen($request->receiver_phone) != 11 || substr($request->receiver_phone, 0, 1) != '0') return response()->json([
+            'message' => 'Receiver phone is invalid',
+            'status' => 203,
+        ], 203);
 
         $unique = uniqid();
         $fileName = $unique . time() . '.' . $request->file->extension();
@@ -71,28 +90,24 @@ class LetterController extends Controller
         });
         $image->save(public_path('uploads/' . $fileName));
 
-        // $request->file->move(public_path('uploads'), $fileName);
-
-
-
         $number = Letter::whereDate('created_at', Carbon::today()->toDateString())->count() + 1;
         $letter = new Letter();
         $letter->file = $fileName;
         $letter->letter_id = substr($unique, strlen($unique) - 4, strlen($unique)) . '-' . date('Ymd') . '-' . $number;
         $letter->sender_phone = $request->sender_phone;
         $letter->receiver_phone = $request->receiver_phone;
-        $letter->status = 'uploaded';
+        $letter->status = 1;
         $letter->save();
         return response()->json([
             'message' => 'File uploaded successfully',
-            'status' => 201,
+            'status' => 200,
             'data' => $letter,
-        ], 201);
+        ], 200);
     }
 
     public function findOption(Request $request)
     {
-        $letter = Letter::where('status', 'uploaded')->where('letter_id', 'like', '%' . $request->q . '%')->get()->take(10);
+        $letter = Letter::where('status', 1)->where('letter_id', 'like', '%' . $request->q . '%')->get()->take(10);
         return response()->json($letter, 200);
     }
 
@@ -122,7 +137,7 @@ class LetterController extends Controller
             ], 203);
         }
         $letter = Letter::find($id);
-        $letter->status = 'received';
+        $letter->status = 2;
         $letter->stamp_value = $request->stamp_value;
         $letter->type = $request->type;
         $letter->next = $request->next;

@@ -55,9 +55,9 @@ class BagController extends Controller
             $bag = new Bag();
             $bag->bag_id = substr($unique, strlen($unique) - 4, strlen($unique)) . '-' . date('Ymd') . '-' . $number;
             $bag->po_id = auth()->user()->po_id;
-            $bag->letter_id = $letterIds;
             $bag->date = Carbon::parse($request->bag_date)->toDateString();
             $bag->save();
+            Letter::whereIn('id', $letterIds)->update(['bag_id' => $bag->id]);
         }
 
 

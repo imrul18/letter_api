@@ -16,7 +16,8 @@ class checkAdminType
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        if ($user && $user->type === 'admin') {
+        info($user);
+        if ($user && $user->type == 1) {
             return $next($request);
         }
         return response()->json([

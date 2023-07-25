@@ -3,30 +3,60 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\HeadPostOffice;
+use App\Models\PostOffice;
 use App\Models\User;
+use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public $userType = [
+        '1' => 'Admin',
+        '2' => 'Counter',
+        '3' => 'Manager',
+        '4' => 'Post Man',
+    ];
+
     public function index(Request $request)
     {
-        $users = User::with('postOffice')
-            ->where('name', 'like', '%' . $request->q . '%')
-            ->orWhereHas('postOffice', function ($query) use ($request) {
-                $query->where('code', 'like', '%' . $request->q . '%');
-            })
+        $users = User::with('postOffice.headPostOffice.zone')
+            ->where('username', 'like', '%' . $request->q . '%')
             ->paginate($request->get('perPage', 10));
         return response()->json($users, 200);
     }
+
+    public function getUserName(Request $request)
+    {
+        $username = '';
+        if ($request->zone_id && $request->head_id && $request->po_id && $request->type) {
+            $zone = Zone::find($request->zone_id);
+            $head_po = HeadPostOffice::find($request->head_id);
+            $po = PostOffice::find($request->po_id);
+            $count = User::count() + 1;
+            $username = strtolower(substr($zone->name, 0, 1) . substr($head_po->name, 0, 1) . substr($po->name, 0, 1) .
+                substr($this->userType[$request->type], 0, 1) . "_1" . str_pad($count, 8, '0', STR_PAD_LEFT));
+        }
+        return response()->json($username, 200);
+    }
+
     public function store(Request $request)
     {
-        if (!$request->phone) return response()->json([
-            'message' => 'Phone Number is required',
+        if (!$request->username) return response()->json([
+            'message' => 'Username is required',
             'status' => 203,
         ], 203);
         if (!$request->type) return response()->json([
-            'message' => 'User role is required',
+            'message' => 'Type is required',
+            'status' => 203,
+        ], 203);
+        if (!$request->zone_id) return response()->json([
+            'message' => 'Zone is required',
+            'status' => 203,
+        ], 203);
+        if (!$request->head_id) return response()->json([
+            'message' => 'Head Post office is required',
             'status' => 203,
         ], 203);
         if (!$request->po_id) return response()->json([
@@ -34,8 +64,7 @@ class UserController extends Controller
             'status' => 203,
         ], 203);
         $user = new User();
-        $user->name = $request->name;
-        $user->phone = $request->phone;
+        $user->username = $request->username;
         $user->password = Hash::make('123456');
         $user->type = $request->type;
         $user->po_id = $request->po_id;

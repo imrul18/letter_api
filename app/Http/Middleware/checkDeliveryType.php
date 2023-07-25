@@ -16,7 +16,7 @@ class checkDeliveryType
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        if ($user && $user->type === 'delivery') {
+        if ($user && $user->type == 4) {
             return $next($request);
         }
         return response()->json([

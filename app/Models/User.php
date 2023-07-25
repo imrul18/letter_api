@@ -19,8 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'phone',
+        'username',
         'password',
         'type',
         'po_id',
@@ -37,20 +36,35 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = ['user_type'];
+    public function getUserTypeAttribute()
+    {
+        return $this->userType[$this->type];
+    }
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'status' => 'integer',
         'po_id' => 'integer',
+        'type' => 'integer',
     ];
 
     public $userType = [
-        'admin' => 'admin',
-        'user' => 'user',
-        'delivery' => 'delivery',
+        '1' => 'Admin',
+        '2' => 'Counter',
+        '3' => 'Manager',
+        '4' => 'Post Man',
     ];
 
+
+
+    /**
+     * Get the postOffice that owns the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function postOffice()
     {
-        return $this->hasOne(PostOffice::class, 'id', 'po_id');
+        return $this->belongsTo(PostOffice::class, 'po_id', 'id');
     }
 }

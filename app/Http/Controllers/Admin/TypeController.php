@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Type;
@@ -10,18 +10,19 @@ class TypeController extends Controller
 {
     public function index(Request $request)
     {
-        $types = Type::where('po_id', auth()->user()->po_id)->where('name', 'like', '%' . $request->q . '%')->paginate($request->get('perPage', 10));
+        $types = Type::where('name', 'like', '%' . $request->q . '%')->paginate($request->get('perPage', 10));
         return response()->json($types, 200);
     }
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
+        if (!$request->name) return response()->json([
+            'message' => 'Name is required',
+            'status' => 203,
+        ], 203);
+
         $type = new Type();
         $type->name = $request->name;
         $type->description = $request->description;
-        $type->po_id = auth()->user()->po_id;
         $type->save();
         return response()->json([
             'message' => 'Type created successfully',

@@ -16,7 +16,7 @@ class checkUserType
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        if ($user && $user->type === 'user') {
+        if ($user && ($user->type == 2 || $user->type == 3)) {
             return $next($request);
         }
         return response()->json([

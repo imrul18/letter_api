@@ -11,13 +11,11 @@ class Type extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'po_id',
         'name',
         'description',
         'status'
     ];
 
-    //cast
     protected $casts = [
         'status' => 'integer',
     ];

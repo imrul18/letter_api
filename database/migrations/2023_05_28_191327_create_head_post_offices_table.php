@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_offices', function (Blueprint $table) {
+        Schema::create('head_post_offices', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('code')->unique()->nullable();
-            $table->integer('head_po_id');
+            $table->integer('zone_id');
             $table->string('address')->nullable();
-            $table->boolean('status')->default(true);
-            $table->softDeletes();
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_offices');
+        Schema::dropIfExists('head_post_offices');
     }
 };
