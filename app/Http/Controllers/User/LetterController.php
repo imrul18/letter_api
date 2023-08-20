@@ -107,7 +107,7 @@ class LetterController extends Controller
 
     public function findOption(Request $request)
     {
-        $letter = Letter::where('letter_id', 'like', '%' . $request->q . '%')->get()->take(10);
+        $letter = Letter::where('letter_id', 'like', '%' . $request->q . '%')->orWhere('sender_phone', $request->q)->get()->take(25);
         return response()->json($letter, 200);
     }
 
