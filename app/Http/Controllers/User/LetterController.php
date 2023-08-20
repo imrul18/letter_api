@@ -69,12 +69,12 @@ class LetterController extends Controller
             'status' => 203,
         ], 203);
 
-        if (strlen($request->sender_phone) != 11  || substr($request->sender_phone, 0, 1) != '0') return response()->json([
+        if (strlen($request->sender_phone) != 11  || substr($request->sender_phone, 0, 2) != '01') return response()->json([
             'message' => 'Sender phone is invalid',
             'status' => 203,
         ], 203);
 
-        if (strlen($request->receiver_phone) != 11 || substr($request->receiver_phone, 0, 1) != '0') return response()->json([
+        if (strlen($request->receiver_phone) != 11 || substr($request->receiver_phone, 0, 2) != '01') return response()->json([
             'message' => 'Receiver phone is invalid',
             'status' => 203,
         ], 203);
