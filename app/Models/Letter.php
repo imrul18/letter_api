@@ -16,7 +16,10 @@ class Letter extends Model
         'file',
         'sender_phone',
         'receiver_phone',
-        'stamp_value',
+        'letter_type',
+        'isAd',
+        'weight',
+        'cost',
         'from',
         'next',
         'to',
@@ -28,19 +31,26 @@ class Letter extends Model
         'status' => 'integer',
     ];
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'current_status'];
 
     public function getImageUrlAttribute()
     {
         return url('uploads/' . $this->file);
     }
+    public function getCurrentStatusAttribute()
+    {
+        return $this->statusOption()[$this->status];
+    }
 
-    public $statusOption = [
-        '1' => 'Uploaded',
-        '2' => 'Received',
-        '3' => 'Delivering',
-        '4' => 'Delivered',
-    ];
+    public function statusOption()
+    {
+        return [
+            1 => 'Uploaded',
+            2 => 'Received',
+            3 => 'Delivering',
+            4 => 'Delivered',
+        ];
+    }
 
     public function type()
     {

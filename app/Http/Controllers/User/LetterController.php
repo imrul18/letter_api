@@ -107,7 +107,7 @@ class LetterController extends Controller
 
     public function findOption(Request $request)
     {
-        $letter = Letter::where('status', 1)->where('letter_id', 'like', '%' . $request->q . '%')->get()->take(10);
+        $letter = Letter::where('letter_id', 'like', '%' . $request->q . '%')->get()->take(10);
         return response()->json($letter, 200);
     }
 
@@ -124,23 +124,31 @@ class LetterController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if ($request->weight > 30000) {
+            return response()->json([
+                'message' => 'Weight can be maximum 30KG (30000gram)',
+                'status' => 203,
+            ], 203);
+        }
+        if ($request->weight < 1) {
+            return response()->json([
+                'message' => 'Invalid Weight',
+                'status' => 203,
+            ], 203);
+        }
         if (!$request->type) {
             return response()->json([
                 'message' => 'Type is required',
                 'status' => 203,
             ], 203);
         }
-        if (!$request->stamp_value) {
-            return response()->json([
-                'message' => 'Stamp Value is required',
-                'status' => 203,
-            ], 203);
-        }
         $letter = Letter::find($id);
         $letter->status = 2;
-        $letter->stamp_value = $request->stamp_value;
+        $letter->weight = $request->weight;
+        $letter->cost = $request->cost;
+        $letter->letter_type = $request->letter_type;
+        $letter->isAd = $request->isAd;
         $letter->type = $request->type;
-        $letter->next = $request->next;
         $letter->received_at = Carbon::now();
         $letter->from = auth()->user()->po_id;
         $letter->save();
@@ -156,7 +164,7 @@ class LetterController extends Controller
     public function delivery(Request $request, string $id)
     {
         $letter = Letter::find($id);
-        $letter->status = 'delivered';
+        $letter->status = 4;
         if ($letter) {
             return response()->json([
                 'message' => '',

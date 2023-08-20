@@ -19,7 +19,10 @@ return new class extends Migration
             $table->string('file');
             $table->string('sender_phone');
             $table->string('receiver_phone');
-            $table->string('stamp_value')->nullable();
+            $table->string('letter_type')->nullable();
+            $table->string('isAd')->default(1);
+            $table->string('weight')->nullable()->comment('in gram');
+            $table->string('cost')->nullable();
             $table->string('from')->nullable()->comment('post office id');
             $table->string('next')->nullable();
             $table->string('to')->nullable()->comment('post office id');
